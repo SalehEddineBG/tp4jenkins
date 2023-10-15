@@ -1,11 +1,10 @@
 version: '3'
 
 services:
-
   # Spring Boot Application
   spring-boot-app:
-      image: backend
-      ports:
+    image: backend
+    ports:
       - "8081:8081"
     environment:
       - SPRING_DATASOURCE_URL=jdbc:mysql://mysql:3306/demo
@@ -15,6 +14,8 @@ services:
       - SPRING_DATA_SOURCE_DRIVER_CLASS_NAME=com.mysql.cj.jdbc.Driver
     depends_on:
       - mysql
+    networks:
+      - backend
 
   mysql:
     image: mysql:5.7
@@ -23,24 +24,31 @@ services:
       MYSQL_DATABASE: 'demo'
       MYSQL_ROOT_USERNAME: 'root'
       MYSQL_ROOT_PASSWORD: 'root'
-      networks:
+    networks:
       - backend
     ports:
       - '3306:3306'
     volumes:
       - demo:/var/lib/mysql
 
-#Angular application
+  # Angular application
   angular-app:
-     image: frontend
-      ports:
-        - "4200:80"
-       depends_on:
-      - backend
-    
+    image: frontend
+    ports:
+      - "4200:80"
+    depends_on:
+      - spring-boot-app
     networks:
       - frontend
 
+networks:
+  backend:
+    driver: bridge
+
+  frontend:
+    driver: bridge
+
 volumes:
   demo:
-  
+    driver: local
+
