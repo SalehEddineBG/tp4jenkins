@@ -1,18 +1,18 @@
 version: '3'
 
 services:
-  backend:
-    build:
-      context: ./backend
-      dockerfile: Dockerfile
-    ports:
+
+  # Spring Boot Application
+  spring-boot-app:
+      image: backend
+      ports:
       - "8081:8081"
     environment:
-      - spring.datasource.url=jdbc:mysql://mysql:3306/demo
-      - spring.datasource.username=root
-      - spring.datasource.password=root
-      - spring.jpa.hibernate.ddl-auto=update
-      - spring.datasource.driver-class-name=com.mysql.cj.jdbc.Driver
+      - SPRING_DATASOURCE_URL=jdbc:mysql://mysql:3306/demo
+      - SPRING_DATASOURCE_USERNAME=root
+      - SPRING_DATASOURCE_PASSWORD=root
+      - SPRING_JPA_HIBERNATE_DDL_AUTO=update
+      - SPRING_DATA_SOURCE_DRIVER_CLASS_NAME=com.mysql.cj.jdbc.Driver
     depends_on:
       - mysql
 
@@ -23,24 +23,24 @@ services:
       MYSQL_DATABASE: 'demo'
       MYSQL_ROOT_USERNAME: 'root'
       MYSQL_ROOT_PASSWORD: 'root'
+      networks:
+      - backend
     ports:
       - '3306:3306'
     volumes:
       - demo:/var/lib/mysql
 
-  frontend:
-    build:
-      context: ./frontend
-      dockerfile: Dockerfile
-    ports:
-      - "8080:80"
+#Angular application
+  angular-app:
+     image: frontend
+      ports:
+        - "4200:80"
+       depends_on:
+      - backend
+    
+    networks:
+      - frontend
 
 volumes:
   demo:
-    driver: local
-
-networks:
-  backend_network:
-    driver: bridge
-  frontend_network:
-    driver: bridge
+  
