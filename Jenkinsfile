@@ -16,7 +16,7 @@ pipeline {
         }
         stage("Generate backend image") {
             steps {
-                dir("tp4jenkins") {
+                dir("tp4jenkins/springboot/app") {
                     sh "mvn clean install"
                     sh "docker build -t backend ."
                 }                
@@ -24,7 +24,7 @@ pipeline {
         }
         stage('Generate Frontend image') {
             steps {
-                dir('frontend') {
+                dir('tp4jenkins/angular-app') {
                     sh 'docker build -t frontend .'
                 }
             }
