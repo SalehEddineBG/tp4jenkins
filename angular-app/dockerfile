@@ -1,0 +1,15 @@
+# Utilisation d'une image de base avec Node.js et Angular CLI
+FROM node:14
+
+# Copie des fichiers de l'application dans le conteneur
+COPY ./src /app
+
+# Définition du répertoire de travail
+WORKDIR /app
+
+# Installation des dépendances et build de l'application Angular
+RUN npm install
+RUN ng build --prod
+
+# Exécution du serveur Angular
+CMD ["ng", "serve", "--host", "0.0.0.0"]
