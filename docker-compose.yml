@@ -7,10 +7,26 @@ services:
       dockerfile: Dockerfile
     ports:
       - "8081:8081"
+    environment:
+      - spring.datasource.url=jdbc:mysql://mysql:3306/demo
+      - spring.datasource.username=root
+      - spring.datasource.password=root
+      - spring.jpa.hibernate.ddl-auto=update
+      - spring.datasource.driver-class-name=com.mysql.cj.jdbc.Driver
+    depends_on:
+      - mysql
+
+  mysql:
+    image: mysql:5.7
+    restart: always
+    environment:
+      MYSQL_DATABASE: 'demo'
+      MYSQL_ROOT_USERNAME: 'root'
+      MYSQL_ROOT_PASSWORD: 'root'
+    ports:
+      - '3306:3306'
     volumes:
-      - ./backend/target/demo-0.0.1.jar:/app.jar
-    networks:
-      - backend_network
+      - demo:/var/lib/mysql
 
   frontend:
     build:
@@ -18,8 +34,10 @@ services:
       dockerfile: Dockerfile
     ports:
       - "8080:80"
-    networks:
-      - frontend_network
+
+volumes:
+  demo:
+    driver: local
 
 networks:
   backend_network:
