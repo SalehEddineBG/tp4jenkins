@@ -1,5 +1,5 @@
 # Étape 1 : Builder l'application Angular
-FROM node:16.14.0 as node
+FROM node:16.15.0 as node
 WORKDIR /app
 COPY package*.json ./
 RUN npm install
