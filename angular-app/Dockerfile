@@ -1,13 +1,11 @@
-# Étape 1 : Builder l'application Angular
-FROM node:16.15.0 as node
+FROM node:16-alpine AS build
 WORKDIR /app
 COPY package*.json ./
-RUN npm install
+RUN npm install --force
 COPY . .
-RUN npm run build -- --prod
-EXPOSE 4200
-CMD ["npm","start"]
+RUN npm run build --force
 
-
-
-
+### STAGE 2: Run ###
+FROM nginx:1.17.1-alpine
+COPY nginx.conf /etc/nginx/nginx.conf
+COPY --from=build /app/dist/angular-app /usr/share/nginx/html
