@@ -1,16 +1,13 @@
 # Étape 1 : Builder l'application Angular
-FROM node:14 as build
+FROM node:16.14.0 as node
 WORKDIR /app
-COPY . .
+COPY package*.json ./
 RUN npm install
+COPY . .
 RUN npm run build -- --prod
+EXPOSE 4200
+CMD ["npm","start"]
 
-# Étape 2 : Utiliser Nginx pour servir l'application Angular build
-FROM nginx:alpine
-COPY --from=build /app/dist/* /usr/share/nginx/html/
-COPY nginx.conf /etc/nginx/nginx.conf
-EXPOSE 80
-CMD ["nginx", "-g", "daemon off;"]
 
 
 
